@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REHAN &ndash; 3D Creator Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Kanit', sans-serif;
+      background: #0C0C0C;
+      color: #D7E2EA;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    ::selection { background: rgba(139,0,0,0.35); color: #fff; }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #0C0C0C; }
+    ::-webkit-scrollbar-thumb { background: rgba(139,0,0,0.4); border-radius: 3px; }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #D7E2EA 0%, #8B0000 50%, #C9A96E 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-gold {
+      background: linear-gradient(135deg, #C9A96E, #D7E2EA);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    .card-glow {
+      border: 1px solid rgba(215,226,234,0.06);
+      transition: all 0.4s ease;
+    }
+    .card-glow:hover {
+      border-color: rgba(139,0,0,0.3);
+      box-shadow: 0 0 30px rgba(139,0,0,0.08), 0 0 60px rgba(139,0,0,0.04);
+      transform: translateY(-4px);
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 32px;
+      background: #8B0000;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 9999px;
+      border: 2px solid #8B0000;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn-primary:hover {
+      background: #6B0000;
+      border-color: #6B0000;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(139,0,0,0.35);
+    }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 32px;
+      background: transparent;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 9999px;
+      border: 2px solid #8B0000;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn-outline:hover {
+      background: #8B0000;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(139,0,0,0.35);
+    }
+
+    .project-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(215,226,234,0.06);
+      transition: all 0.5s ease;
+      cursor: pointer;
+    }
+    .project-card:hover {
+      border-color: rgba(139,0,0,0.25);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+    .project-card img {
+      transition: transform 0.7s ease;
+    }
+    .project-card:hover img {
+      transform: scale(1.05);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.15; }
+      50% { opacity: 0.3; }
+    }
+    .orb-1 { animation: float 8s ease-in-out infinite; }
+    .orb-2 { animation: float 10s ease-in-out infinite reverse; }
+    .orb-3 { animation: pulse-glow 4s ease-in-out infinite; }
+
+    @media (max-width: 640px) {
+      .btn-primary, .btn-outline { padding: 12px 24px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-[#0C0C0C]/70 backdrop-blur-2xl border-b border-white/[0.03]">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8 h-16 sm:h-20 flex items-center justify-between">
+      <a href="#" class="text-xl sm:text-2xl font-bold tracking-wider gradient-text">REHAN</a>
+      <ul class="hidden md:flex items-center gap-8 lg:gap-10">
+        <li><a href="#about" class="text-sm font-medium text-[#D7E2EA]/70 hover:text-white transition-colors duration-300 relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1.5px] after:bg-[#8B0000] after:transition-all after:duration-300 hover:after:w-full">About</a></li>
+        <li><a href="#projects" class="text-sm font-medium text-[#D7E2EA]/70 hover:text-white transition-colors duration-300 relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1.5px] after:bg-[#8B0000] after:transition-all after:duration-300 hover:after:w-full">Projects</a></li>
+        <li><a href="#services" class="text-sm font-medium text-[#D7E2EA]/70 hover:text-white transition-colors duration-300 relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[1.5px] after:bg-[#8B0000] after:transition-all after:duration-300 hover:after:w-full">Services</a></li>
+        <li><a href="#contact" class="btn-primary !py-2 !px-5 text-xs font-semibold">Contact</a></li>
+      </ul>
+      <button id="menuBtn" class="md:hidden flex flex-col gap-1.5 p-1.5" aria-label="Toggle menu">
+        <span class="block w-6 h-[2px] rounded-full bg-white transition-all duration-300"></span>
+        <span class="block w-6 h-[2px] rounded-full bg-white transition-all duration-300"></span>
+        <span class="block w-6 h-[2px] rounded-full bg-white transition-all duration-300"></span>
+      </button>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden absolute top-full left-0 right-0 bg-[#0C0C0C]/98 backdrop-blur-2xl border-b border-white/[0.03] overflow-hidden transition-all duration-400" style="max-height:0; opacity:0;">
+      <div class="px-5 py-6 flex flex-col gap-4">
+        <a href="#about" class="text-base text-[#D7E2EA]/70 hover:text-white transition-colors py-2">About</a>
+        <a href="#projects" class="text-base text-[#D7E2EA]/70 hover:text-white transition-colors py-2">Projects</a>
+        <a href="#services" class="text-base text-[#D7E2EA]/70 hover:text-white transition-colors py-2">Services</a>
+        <a href="#contact" class="btn-primary self-start mt-2">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="relative min-h-[100svh] flex items-center justify-center overflow-hidden bg-[#0C0C0C]">
+    <!-- Placeholder background (cinematic gradient) -->
+    <div class="absolute inset-0">
+      <div class="absolute inset-0 bg-gradient-to-br from-[#0C0C0C] via-[#1A0A0A] to-[#0C0C0C]" />
+      <div class="absolute inset-0" style="background: radial-gradient(ellipse at 20% 50%, rgba(139,0,0,0.12) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(201,169,110,0.06) 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, rgba(139,0,0,0.08) 0%, transparent 50%);" />
+      <div class="absolute inset-0 opacity-[0.04]" style="background-image: linear-gradient(rgba(215,226,234,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(215,226,234,0.1) 1px, transparent 1px); background-size: 80px 80px;" />
+      <!-- Floating orbs -->
+      <div class="orb-1 absolute w-72 h-72 top-[10%] -left-[10%] rounded-full" style="background: radial-gradient(circle at center, rgba(139,0,0,0.08), transparent 70%);"></div>
+      <div class="orb-2 absolute w-96 h-96 bottom-[5%] right-[5%] rounded-full" style="background: radial-gradient(circle at center, rgba(201,169,110,0.05), transparent 70%);"></div>
+      <div class="orb-3 absolute w-64 h-64 top-[40%] right-[20%] rounded-full" style="background: radial-gradient(circle at center, rgba(139,0,0,0.06), transparent 70%);"></div>
+    </div>
+
+    <div class="relative z-10 px-5 sm:px-8 w-full pt-24 pb-20 sm:pt-0 sm:pb-0">
+      <div class="max-w-4xl mx-auto text-center">
+        <div class="reveal visible">
+          <span class="inline-flex items-center gap-2 px-4 py-1.5 border border-white/10 rounded-full text-[#D7E2EA]/50 text-[10px] sm:text-xs font-medium tracking-[0.2em] uppercase mb-5 sm:mb-6 backdrop-blur-md bg-white/[0.02]">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#8B0000] animate-pulse"></span>
+            Available for Projects
+          </span>
+        </div>
+
+        <h1 class="reveal visible text-white font-black text-[clamp(36px,7vw,80px)] leading-[1.05] mb-4 sm:mb-5 tracking-tight">
+          Hi, I&rsquo;m <span class="gradient-text">REHAN</span><br />
+          <span class="text-[#D7E2EA]/80">3D Creator</span>
+        </h1>
+
+        <p class="reveal visible reveal-delay-1 text-[#D7E2EA]/50 text-sm sm:text-lg max-w-xl mx-auto mb-7 sm:mb-9 font-light leading-relaxed">
+          I craft immersive 3D experiences, stunning renders, and digital visuals that bring ideas to life. Let&rsquo;s build something extraordinary together.
+        </p>
+
+        <div class="reveal visible reveal-delay-2 flex items-center justify-center gap-3 sm:gap-4 flex-wrap">
+          <a href="#contact" class="btn-primary">Contact Me</a>
+          <a href="#projects" class="btn-outline">View Projects</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 text-[#D7E2EA]/20 text-[10px] tracking-[0.2em] uppercase">
+      <span>Scroll</span>
+      <div class="w-px h-6 sm:h-8" style="background: linear-gradient(to bottom, rgba(215,226,234,0.15), transparent);"></div>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section id="about" class="py-20 sm:py-28 relative">
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
+    <div class="max-w-6xl mx-auto px-5 sm:px-8">
+      <div class="max-w-3xl mx-auto text-center">
+        <div class="reveal">
+          <span class="inline-flex items-center gap-2 text-xs font-medium tracking-[0.2em] uppercase text-[#8B0000]/80 mb-4">
+            <span class="w-6 h-px bg-[#8B0000]/40"></span>
+            About Me
+          </span>
+          <h2 class="text-white font-bold text-[clamp(28px,4vw,48px)] mb-5 leading-tight">
+            Turning Vision into <span class="gradient-text">Reality</span>
+          </h2>
+          <div class="text-[#D7E2EA]/50 text-sm sm:text-base leading-relaxed space-y-4 font-light">
+            <p>I&rsquo;m a multidisciplinary 3D creator and designer with over 5 years of experience crafting high-quality visual content for brands, agencies, and direct clients. My work spans 3D modeling, photorealistic rendering, motion design, and web experiences.</p>
+            <p>Every project I take on is driven by a commitment to detail, creativity, and technical precision. Whether it&rsquo;s a product visualization, an architectural walkthrough, or a complete brand identity &mdash; I bring the same level of passion and professionalism.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SERVICES ===== -->
+  <section id="services" class="py-20 sm:py-28 bg-[#0A0A0A] relative">
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
+    <div class="max-w-6xl mx-auto px-5 sm:px-8">
+      <div class="text-center mb-12 sm:mb-16">
+        <div class="reveal">
+          <span class="inline-flex items-center gap-2 text-xs font-medium tracking-[0.2em] uppercase text-[#8B0000]/80 mb-4">
+            <span class="w-6 h-px bg-[#8B0000]/40"></span>
+            What I Do
+          </span>
+          <h2 class="text-white font-bold text-[clamp(28px,4vw,48px)] leading-tight">
+            My <span class="gradient-text">Services</span>
+          </h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <div class="reveal card-glow bg-[#0C0C0C] rounded-2xl p-7 sm:p-8 text-center group">
+          <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-5 rounded-2xl bg-[#8B0000]/10 flex items-center justify-center text-2xl sm:text-3xl group-hover:scale-110 group-hover:bg-[#8B0000]/20 transition-all duration-400">🎨</div>
+          <h3 class="text-white font-semibold text-base sm:text-lg mb-2">3D Modeling</h3>
+          <p class="text-[#D7E2EA]/40 text-xs sm:text-sm font-light leading-relaxed">High-poly &amp; low-poly modeling for products, characters, and environments with clean topology.</p>
+        </div>
+
+        <div class="reveal reveal-delay-1 card-glow bg-[#0C0C0C] rounded-2xl p-7 sm:p-8 text-center group">
+          <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-5 rounded-2xl bg-[#8B0000]/10 flex items-center justify-center text-2xl sm:text-3xl group-hover:scale-110 group-hover:bg-[#8B0000]/20 transition-all duration-400">✨</div>
+          <h3 class="text-white font-semibold text-base sm:text-lg mb-2">Rendering</h3>
+          <p class="text-[#D7E2EA]/40 text-xs sm:text-sm font-light leading-relaxed">Photorealistic rendering with advanced lighting, shading, and composition for any project.</p>
+        </div>
+
+        <div class="reveal reveal-delay-2 card-glow bg-[#0C0C0C] rounded-2xl p-7 sm:p-8 text-center group">
+          <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-5 rounded-2xl bg-[#8B0000]/10 flex items-center justify-center text-2xl sm:text-3xl group-hover:scale-110 group-hover:bg-[#8B0000]/20 transition-all duration-400">🌐</div>
+          <h3 class="text-white font-semibold text-base sm:text-lg mb-2">Web Design</h3>
+          <p class="text-[#D7E2EA]/40 text-xs sm:text-sm font-light leading-relaxed">Modern, responsive websites with smooth animations and premium user experiences.</p>
+        </div>
+
+        <div class="reveal reveal-delay-3 card-glow bg-[#0C0C0C] rounded-2xl p-7 sm:p-8 text-center group">
+          <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-5 rounded-2xl bg-[#8B0000]/10 flex items-center justify-center text-2xl sm:text-3xl group-hover:scale-110 group-hover:bg-[#8B0000]/20 transition-all duration-400">🎬</div>
+          <h3 class="text-white font-semibold text-base sm:text-lg mb-2">Motion Design</h3>
+          <p class="text-[#D7E2EA]/40 text-xs sm:text-sm font-light leading-relaxed">Cinematic motion graphics, 3D animations, and visual effects for brands and media.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROJECTS ===== -->
+  <section id="projects" class="py-20 sm:py-28 relative">
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
+    <div class="max-w-6xl mx-auto px-5 sm:px-8">
+      <div class="text-center mb-12 sm:mb-16">
+        <div class="reveal">
+          <span class="inline-flex items-center gap-2 text-xs font-medium tracking-[0.2em] uppercase text-[#8B0000]/80 mb-4">
+            <span class="w-6 h-px bg-[#8B0000]/40"></span>
+            My Work
+          </span>
+          <h2 class="text-white font-bold text-[clamp(28px,4vw,48px)] leading-tight">
+            Featured <span class="gradient-text">Projects</span>
+          </h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        <div class="reveal project-card bg-[#0C0C0C]">
+          <div class="aspect-[16/10] bg-gradient-to-br from-[#1A0A0A] to-[#0C0C0C] flex items-center justify-center">
+            <span class="text-5xl sm:text-6xl opacity-30">🏛️</span>
+          </div>
+          <div class="p-5 sm:p-6">
+            <span class="text-[10px] font-medium tracking-[0.15em] uppercase text-[#8B0000]/70">3D Modeling</span>
+            <h3 class="text-white font-semibold text-base sm:text-lg mt-1 mb-1.5">Architectural Visualization</h3>
+            <p class="text-[#D7E2EA]/40 text-xs sm:text-sm font-light">Photorealistic exterior and interior renders for a luxury residential development.</p>
+          </div>
+        </div>
+
+        <div class="reveal reveal-delay-1 project-card bg-[#0C0C0C]">
+          <div class="aspect-[16/10] bg-gradient-to-br from-[#1A0A0A] to-[#0C0C0C] flex items-center justify-center">
+            <span class="text-5xl sm:text-6xl opacity-30">🎮</span>
+          </div>
+          <div class="p-5 sm:p-6">
+            <span class="text-[10px] font-medium tracking-[0.15em] uppercase text-[#8B0000]/70">3D Modeling</span>
+            <h3 class="text-white font-semibold text-base sm:text-lg mt-1 mb-1.5">Game Asset Pack</h3>
+            <p class="text-[#D7E2EA]/40 text-xs sm:text-sm font-light">High-quality 3D asset pack featuring 40+ models optimized for real-time engines.</p>
+          </div>
+        </div>
+
+        <div class="reveal reveal-delay-2 project-card bg-[#0C0C0C]">
+          <div class="aspect-[16/10] bg-gradient-to-br from-[#1A0A0A] to-[#0C0C0C] flex items-center justify-center">
+            <span class="text-5xl sm:text-6xl opacity-30">💎</span>
+          </div>
+          <div class="p-5 sm:p-6">
+            <span class="text-[10px] font-medium tracking-[0.15em] uppercase text-[#8B0000]/70">Rendering</span>
+            <h3 class="text-white font-semibold text-base sm:text-lg mt-1 mb-1.5">Product Visualization</h3>
+            <p class="text-[#D7E2EA]/40 text-xs sm:text-sm font-light">Jewelry and luxury product renders for an eCommerce brand campaign.</p>
+          </div>
+        </div>
+
+        <div class="reveal reveal-delay-3 project-card bg-[#0C0C0C]">
+          <div class="aspect-[16/10] bg-gradient-to-br from-[#1A0A0A] to-[#0C0C0C] flex items-center justify-center">
+            <span class="text-5xl sm:text-6xl opacity-30">🎬</span>
+          </div>
+          <div class="p-5 sm:p-6">
+            <span class="text-[10px] font-medium tracking-[0.15em] uppercase text-[#8B0000]/70">Motion Design</span>
+            <h3 class="text-white font-semibold text-base sm:text-lg mt-1 mb-1.5">Brand Identity Film</h3>
+            <p class="text-[#D7E2EA]/40 text-xs sm:text-sm font-light">Cinematic 60-second brand film combining 3D animation with live-action compositing.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section id="contact" class="py-20 sm:py-28 bg-[#0A0A0A] relative">
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent" />
+    <div class="max-w-6xl mx-auto px-5 sm:px-8">
+      <div class="text-center mb-12 sm:mb-16">
+        <div class="reveal">
+          <span class="inline-flex items-center gap-2 text-xs font-medium tracking-[0.2em] uppercase text-[#8B0000]/80 mb-4">
+            <span class="w-6 h-px bg-[#8B0000]/40"></span>
+            Get In Touch
+          </span>
+          <h2 class="text-white font-bold text-[clamp(28px,4vw,48px)] leading-tight">
+            Let&rsquo;s Work <span class="gradient-text">Together</span>
+          </h2>
+          <p class="text-[#D7E2EA]/50 text-sm sm:text-base font-light max-w-lg mx-auto mt-3">Have a project in mind? Reach out and let&rsquo;s create something amazing.</p>
+        </div>
+      </div>
+
+      <div class="max-w-2xl mx-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+          <a href="mailto:inambalochinambaloch38@gmail.com" class="reveal card-glow bg-[#0C0C0C] rounded-2xl p-5 sm:p-6 flex items-center gap-4 hover:border-[#8B0000]/30 transition-all duration-300 group no-underline">
+            <div class="w-12 h-12 rounded-xl bg-[#8B0000]/10 flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-[#8B0000]/20 transition-all duration-300 shrink-0">✉</div>
+            <div class="min-w-0">
+              <div class="text-xs font-medium text-[#8B0000]/70 uppercase tracking-wider mb-0.5">Email</div>
+              <div class="text-white text-sm truncate">inambalochinambaloch38@gmail.com</div>
+            </div>
+          </a>
+
+          <a href="mailto:rehanktk737@gmail.com" class="reveal reveal-delay-1 card-glow bg-[#0C0C0C] rounded-2xl p-5 sm:p-6 flex items-center gap-4 hover:border-[#8B0000]/30 transition-all duration-300 group no-underline">
+            <div class="w-12 h-12 rounded-xl bg-[#8B0000]/10 flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-[#8B0000]/20 transition-all duration-300 shrink-0">✉</div>
+            <div class="min-w-0">
+              <div class="text-xs font-medium text-[#8B0000]/70 uppercase tracking-wider mb-0.5">Email</div>
+              <div class="text-white text-sm truncate">rehanktk737@gmail.com</div>
+            </div>
+          </a>
+
+          <a href="tel:+923018037442" class="reveal reveal-delay-2 card-glow bg-[#0C0C0C] rounded-2xl p-5 sm:p-6 flex items-center gap-4 hover:border-[#8B0000]/30 transition-all duration-300 group no-underline">
+            <div class="w-12 h-12 rounded-xl bg-[#8B0000]/10 flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-[#8B0000]/20 transition-all duration-300 shrink-0">📞</div>
+            <div class="min-w-0">
+              <div class="text-xs font-medium text-[#8B0000]/70 uppercase tracking-wider mb-0.5">Phone</div>
+              <div class="text-white text-sm">+92 301 8037442</div>
+            </div>
+          </a>
+
+          <a href="tel:+923073630686" class="reveal reveal-delay-3 card-glow bg-[#0C0C0C] rounded-2xl p-5 sm:p-6 flex items-center gap-4 hover:border-[#8B0000]/30 transition-all duration-300 group no-underline">
+            <div class="w-12 h-12 rounded-xl bg-[#8B0000]/10 flex items-center justify-center text-xl group-hover:scale-110 group-hover:bg-[#8B0000]/20 transition-all duration-300 shrink-0">📞</div>
+            <div class="min-w-0">
+              <div class="text-xs font-medium text-[#8B0000]/70 uppercase tracking-wider mb-0.5">Phone</div>
+              <div class="text-white text-sm">+92 307 3630686</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="text-center mt-10 sm:mt-12">
+          <div class="reveal flex items-center justify-center gap-3 sm:gap-4 flex-wrap">
+            <a href="mailto:inambalochinambaloch38@gmail.com" class="btn-primary">Send Email</a>
+            <a href="tel:+923018037442" class="btn-outline">Call Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="border-t border-white/[0.03] py-8 sm:py-10">
+    <div class="max-w-6xl mx-auto px-5 sm:px-8">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <a href="#" class="text-lg sm:text-xl font-bold tracking-wider gradient-text">REHAN</a>
+        <div class="flex items-center gap-5 sm:gap-6">
+          <a href="#" class="text-[#D7E2EA]/30 text-sm no-underline transition-colors duration-300 hover:text-[#8B0000]">Instagram</a>
+          <a href="#" class="text-[#D7E2EA]/30 text-sm no-underline transition-colors duration-300 hover:text-[#8B0000]">YouTube</a>
+          <a href="#" class="text-[#D7E2EA]/30 text-sm no-underline transition-colors duration-300 hover:text-[#8B0000]">Behance</a>
+          <a href="#" class="text-[#D7E2EA]/30 text-sm no-underline transition-colors duration-300 hover:text-[#8B0000]">LinkedIn</a>
+        </div>
+      </div>
+      <div class="mt-5 pt-5 border-t border-white/[0.03] text-center">
+        <p class="text-[#D7E2EA]/20 text-xs font-light">&copy; 2026 REHAN &mdash; 3D Creator. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== JAVASCRIPT ===== -->
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let menuOpen = false;
+
+    menuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.style.maxHeight = menuOpen ? '400px' : '0';
+      mobileMenu.style.opacity = menuOpen ? '1' : '0';
+      const spans = menuBtn.querySelectorAll('span');
+      if (menuOpen) {
+        spans[0].style.transform = 'rotate(45deg) translateY(5px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(-45deg) translateY(-5px)';
+      } else {
+        spans[0].style.transform = '';
+        spans[1].style.opacity = '';
+        spans[2].style.transform = '';
+      }
+    });
+
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menuOpen = false;
+        mobileMenu.style.maxHeight = '0';
+        mobileMenu.style.opacity = '0';
+        const spans = menuBtn.querySelectorAll('span');
+        spans[0].style.transform = '';
+        spans[1].style.opacity = '';
+        spans[2].style.transform = '';
+      });
+    });
+
+    // Scroll reveal observer
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Navbar background on scroll
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      const scrollY = window.scrollY;
+      if (scrollY > 50) {
+        nav.style.backgroundColor = 'rgba(12,12,12,0.85)';
+      } else {
+        nav.style.backgroundColor = 'rgba(12,12,12,0.7)';
+      }
+      lastScroll = scrollY;
+    }, { passive: true });
+  </script>
+
+</body>
+</html>
